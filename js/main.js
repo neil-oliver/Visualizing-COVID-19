@@ -15,7 +15,8 @@ var app = new Vue({
         nycGeoJSON: null,
         map:false,
         population: {},
-        neighborhoods:{}
+        neighborhoods:{},
+        showAbout: true
     },
     created () {
         var that = this;

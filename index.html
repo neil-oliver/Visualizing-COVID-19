@@ -21,6 +21,25 @@
         <label for="mapCheckbox">Display on Map</label>
         <input type="checkbox" v-model="map" id='mapCheckbox'>
       </div>
+      <div class='selection'>
+        <label for="aboutCheckbox">Show About</label>
+        <input type="checkbox" v-model="showAbout" id='aboutCheckbox'>
+      </div>
+    </div>
+    <div id="about" :class="{ active: showAbout }">
+      <div id="about-title">NYC: Together as One</div>
+      <div id="about-body">
+        <p>Visualize New York City without borders. Each circle represents a zipcode, and how they have been affected by COVID-19.
+        NYC lives and breathes together; when one area is suffering, everyone feels the affects. You can randomize the locations, but the outcome is the still the same.
+        New York cannot heal one neighborhood at a time, it must work together, as one.</p>
+        <br>
+        <p>More tests are being completed every hour, but we cannot be certain about the true number of people who are infected.
+        Experts estimations vary, from 5x the current tested number to 18x. You can change the multiplier to view how this uncertainly affects the overall picture.</p>
+        <br>
+        <p>Alternatively, click to the map button to view the most affected areas.</p>
+        <br>
+      </div>
+      <button id='aboutButton' v-on:click="showAbout = false">Dismiss</button>
     </div>
     <div id="main">
       <div class='vis' id='bubbles'>
@@ -36,7 +55,7 @@
         </svg>
       </div>
     </div>
-    <div id='tooltip' v-bind:class="{ active: tooltipVisible }"></div>
+    <div id='tooltip' :class="{ active: tooltipVisible }"></div>
   </div>
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
