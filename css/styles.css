@@ -25,6 +25,10 @@ path {
     text-align: center;
 }
 
+.slider{
+    padding-right: 5px;
+}
+
 
 circle,text, path{
     transition: all 1s ease-in-out 0s;

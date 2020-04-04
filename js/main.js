@@ -14,7 +14,8 @@ var app = new Vue({
         maxMultiplier: 18,
         nycGeoJSON: null,
         map:false,
-        population: {}
+        population: {},
+        neighborhoods:{}
     },
     created () {
         var that = this;
@@ -45,6 +46,16 @@ var app = new Vue({
                 that.population[element.Zip] = element
             });
 
+        })
+
+        d3.csv('data/neighborhoods.csv').then(function(data){
+            data.forEach(element => {
+                element.Zip = JSON.parse(element.Zip)
+                for (i in element.Zip){
+                    let zip = element.Zip[i]
+                    that.neighborhoods[zip] = {Borough: element.Borough, Neighborhood: element.Neighborhood}
+                }
+            });
         })
 
     },
@@ -96,7 +107,13 @@ var app = new Vue({
                     .style("top", (event.clientY) + "px");	
             this.tooltipVisible = true;
 
-            let tooltipString = `Zip: ${el.MODZCTA}<br>
+            let tooltipString =''
+            if (this.neighborhoods.hasOwnProperty(el.MODZCTA)){
+                tooltipString += `Neighborhood: ${this.neighborhoods[el.MODZCTA].Neighborhood}<br>
+                Borough: ${this.neighborhoods[el.MODZCTA].Borough}<br>`
+            }
+
+            tooltipString += `Zip: ${el.MODZCTA}<br>
             Number of Tests: ${el.Total}<br>
             Number of positive: ${el.Positive}<br>
             Percentage positive: ${el['zcta_cum.perc_pos']}<br>

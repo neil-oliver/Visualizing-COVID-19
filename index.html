@@ -11,8 +11,8 @@
   <div id="app">
     <div id="sidebar">
       <div class='selection'>
-        <label for="MultiplierSlider">multiplier</label>
-        <input type="range" min="1" :max="maxMultiplier" v-model="multiplier" class="slider" step="1" id="multiplierSlider">{{multiplier}}
+        <label for="MultiplierSlider">Multiplier</label>
+        <input type="range" min="1" :max="maxMultiplier" v-model="multiplier" class="slider" step="1" id="multiplierSlider"> {{multiplier}}
       </div>
       <div class='selection'>
         <button id='randomButton' :disabled="map" v-on:click="randomize">Randomize</button>
