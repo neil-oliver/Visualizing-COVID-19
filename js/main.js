@@ -13,7 +13,8 @@ var app = new Vue({
         multiplier: 1,
         maxMultiplier: 18,
         nycGeoJSON: null,
-        map:false
+        map:false,
+        population: {}
     },
     created () {
         var that = this;
@@ -35,6 +36,14 @@ var app = new Vue({
 
         d3.json('data/nyc.json').then(function(data){
             that.nycGeoJSON = data
+
+        })
+
+        d3.csv('data/population.csv').then(function(data){
+            console.log(data)
+            data.forEach(element => {
+                that.population[element.Zip] = element
+            });
 
         })
 
@@ -87,7 +96,22 @@ var app = new Vue({
                     .style("top", (event.clientY) + "px");	
             this.tooltipVisible = true;
 
-            let tooltipString = `Zip: ${el.MODZCTA}<br>Number of Tests: ${el.Total}<br>Number of positive: ${el.Positive}<br>Percentage positive: ${el['zcta_cum.perc_pos']}<br>Projected Number of Positive in Population: ${el.Positive * this.multiplier}`
+            let tooltipString = `Zip: ${el.MODZCTA}<br>
+            Number of Tests: ${el.Total}<br>
+            Number of positive: ${el.Positive}<br>
+            Percentage positive: ${el['zcta_cum.perc_pos']}<br>
+            Projected Number of Positive in Population: ${el.Positive * this.multiplier}`
+
+            if (this.population.hasOwnProperty(el.MODZCTA)){
+                let populationTested = (el.Total / this.population[el.MODZCTA].Population)*100
+                let PopulationPositive = (el.Positive / this.population[el.MODZCTA].Population)*100
+                let PopulationProjected = ((el.Positive*this.multiplier) / this.population[el.MODZCTA].Population)*100
+
+                tooltipString += `<br>Zip Population: ${this.population[el.MODZCTA].Population}<br>
+                Percentage of Population Tested: ${populationTested.toFixed(2)}%<br>
+                Percentage of Population Tested Positive: ${PopulationPositive.toFixed(2)}%<br>
+                Projected Percentage of Population Tested Positive: ${PopulationProjected.toFixed(2)}%`
+            }
 
             document.querySelector('#tooltip').innerHTML = tooltipString;
         },
