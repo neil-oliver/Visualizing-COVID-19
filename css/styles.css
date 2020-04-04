@@ -1,0 +1,48 @@
+#sidebar{
+    float:left;
+    top:0;
+    width:20vw;
+    float: left;
+    padding:20px;
+}
+
+.value{
+    font-weight: 800;
+    font-size: 2em;
+}
+
+.label{
+    display: block;
+}
+
+
+path {
+    fill: none;
+}
+
+.vis{
+    display: block;
+    text-align: center;
+}
+
+
+circle{
+    transition: all 1s ease-in-out 0s;
+}
+
+
+#tooltip{
+    padding: 10px;
+    border-radius: 5px;
+    background-color: rgba(12, 132, 186, 0.3);
+    position: fixed;			
+    pointer-events: none;		
+    opacity: 0;
+    width:400px;
+}
+
+#tooltip.active{
+    transition: opacity 1s ease-in-out 0s;
+    opacity: 1;
+}
+
