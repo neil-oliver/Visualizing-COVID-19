@@ -26,7 +26,7 @@ path {
 }
 
 
-circle,text{
+circle{
     transition: all 1s ease-in-out 0s;
 }
 

@@ -101,7 +101,6 @@ var app = new Vue({
     watch:{
         map(){
             if(this.map){
-                console.log('map clicked')
                 let that = this
                 this.tests.forEach(element => {
                     if (that.geolocation.hasOwnProperty(element.MODZCTA)){
