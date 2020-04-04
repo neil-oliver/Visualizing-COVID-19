@@ -5,12 +5,15 @@ var app = new Vue({
     el: '#app',
     data: {
         tests: [],
+        geolocation: {},
         svgWidth : window.innerWidth,
         svgHeight : window.innerHeight,
         margin: {top: 50, left: 50, bottom: 50, right: 50 },
         tooltipVisible: false,
         multiplier: 1,
-        maxMultiplier: 18
+        maxMultiplier: 18,
+        nycGeoJSON: null,
+        map:false
     },
     created () {
         var that = this;
@@ -23,6 +26,18 @@ var app = new Vue({
             that.tests = data
 
         })
+
+        d3.dsv(';','data/us-zip-code-latitude-and-longitude.csv').then(function(data){
+            data.forEach(element => {
+                that.geolocation[element.Zip] = element
+            });
+        })
+
+        d3.json('data/nyc.json').then(function(data){
+            that.nycGeoJSON = data
+
+        })
+
     },
     computed: {
         width() {
@@ -32,17 +47,35 @@ var app = new Vue({
             return this.svgHeight - this.margin.top - this.margin.bottom;
         },
         scale() {
-            const x = d3.scaleTime().range([0, this.width])
+
+            let x = d3.scaleTime().range([0, this.width])
                 .domain([0,1]);
 
-            const y = d3.scaleLinear().range([0,this.height])
+            let y = d3.scaleLinear().range([0,this.height])
                 .domain([0,1]);
 
             const size = d3.scaleLinear().range([5,500])
                 .domain([0,d3.max(this.tests, d => d.Positive * this.maxMultiplier)]);
 
+            if (this.map){
+                x = (x) => x
+                y = (y) => y
+            }
+
             return {size, x, y};
-        }
+        },
+        nyc(){
+            let path = d3.geoPath()
+                .projection(this.mapProjection)
+
+            return path(this.nycGeoJSON)
+        },
+        mapProjection(){
+            return d3.geoConicConformal()
+            .parallels([33, 45])
+            .rotate([96, -39])
+            .fitSize([this.width, this.height], this.nycGeoJSON)
+        },
     },
     methods: {
         tooltip(el){
@@ -60,6 +93,23 @@ var app = new Vue({
                 element.x = Math.random()
                 element.y = Math.random()
             });
+        },
+    },
+    watch:{
+        map(){
+            if(this.map){
+                console.log('map clicked')
+                let that = this
+                this.tests.forEach(element => {
+                    if (that.geolocation.hasOwnProperty(element.MODZCTA)){
+                        let coords = that.mapProjection([that.geolocation[element.MODZCTA].Longitude, that.geolocation[element.MODZCTA].Latitude])
+                        element.x = coords[0]
+                        element.y = coords[1]
+                    }
+                });
+            } else {
+                this.randomize()
+            }
         }
     }
 });

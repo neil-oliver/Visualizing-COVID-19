@@ -17,6 +17,10 @@
       <div class='selection'>
         <button id='randomButton' v-on:click="randomize">Randomize</button>
       </div>
+      <div class='selection'>
+        <label for="mapCheckbox">Display on Map</label>
+        <input type="checkbox" v-model="map" id='mapCheckbox'>
+      </div>
     </div>
     <div id="main">
       <div class='vis' id='bubbles'>
@@ -26,6 +30,7 @@
               <circle :cx="scale.x(element.x)" :cy="scale.y(element.y)" :r="scale.size(element.Positive)" fill="#0c84ba"/>
               <circle :cx="scale.x(element.x)" :cy="scale.y(element.y)" :r="scale.size(element.Positive*multiplier)"  fill="#0c84ba" fill-opacity="0.5" stroke-opacity="1" stroke="#0c84ba" stroke-width='1px' stroke-dasharray="2"/>
             </g>
+            <path v-if="map" :d="nyc" stroke='#000' stroke-width='1px'/>
           </g>
         </svg>
       </div>
