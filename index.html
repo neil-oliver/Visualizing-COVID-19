@@ -26,7 +26,7 @@
         <input type="checkbox" v-model="showAbout" id='aboutCheckbox'>
       </div>
     </div>
-    <div id="about" :class="{ active: showAbout }">
+    <div id="about" v-show="showAbout">
       <div id="about-title">NYC: Together as One</div>
       <div id="about-body">
         <p>Visualize New York City without borders. Each circle represents a zipcode, and how they have been affected by COVID-19.

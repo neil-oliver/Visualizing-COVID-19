@@ -42,7 +42,6 @@ var app = new Vue({
         })
 
         d3.csv('data/population.csv').then(function(data){
-            console.log(data)
             data.forEach(element => {
                 that.population[element.Zip] = element
             });

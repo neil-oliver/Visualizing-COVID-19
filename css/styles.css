@@ -60,18 +60,12 @@ circle,text, path{
     border-radius: 5px;
     background-color: rgba(255, 255, 255, 0.8);
     position: absolute;
-    opacity: 0;
     width:800px;
     height:500px;
     border-style: solid;
     border-width: 1px;
     border-color: grey;
 
-}
-
-#about.active{
-    transition: opacity 1s ease-in-out 0s;
-    opacity: 1;
 }
 
 #about-title{
