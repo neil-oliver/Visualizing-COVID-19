@@ -26,7 +26,7 @@ path {
 }
 
 
-circle{
+circle,text{
     transition: all 1s ease-in-out 0s;
 }
 
@@ -34,7 +34,7 @@ circle{
 #tooltip{
     padding: 10px;
     border-radius: 5px;
-    background-color: rgba(12, 132, 186, 0.3);
+    background-color: rgba(255, 255, 255, 0.5);
     position: fixed;			
     pointer-events: none;		
     opacity: 0;

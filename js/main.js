@@ -56,13 +56,16 @@ var app = new Vue({
 
             const size = d3.scaleLinear().range([5,500])
                 .domain([0,d3.max(this.tests, d => d.Positive * this.maxMultiplier)]);
+            
+            const color = d3.scaleSequential()
+                .domain([100,0]).interpolator(d3.interpolateRdYlGn)
 
             if (this.map){
                 x = (x) => x
                 y = (y) => y
             }
 
-            return {size, x, y};
+            return {size, x, y,color};
         },
         nyc(){
             let path = d3.geoPath()
@@ -84,7 +87,7 @@ var app = new Vue({
                     .style("top", (event.clientY) + "px");	
             this.tooltipVisible = true;
 
-            let tooltipString = `Zip: ${el.MODZCTA}<br>Number of Tests: ${el.Total}<br>Number of positive: ${el.Positive}<br>Projected Number of Positive in Population: ${el.Positive * this.multiplier}`
+            let tooltipString = `Zip: ${el.MODZCTA}<br>Number of Tests: ${el.Total}<br>Number of positive: ${el.Positive}<br>Percentage positive: ${el['zcta_cum.perc_pos']}<br>Projected Number of Positive in Population: ${el.Positive * this.multiplier}`
 
             document.querySelector('#tooltip').innerHTML = tooltipString;
         },
