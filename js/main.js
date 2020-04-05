@@ -85,7 +85,7 @@ var app = new Vue({
                 for (let i in this.totals){
                     let el = this.totals[i]
                     for (let x=0;x<(this.multiplier-1);x++){
-                        additional.push({'zip':el.zip, outcome: 'Unknown'})
+                        additional.push({'zip':el.zip, outcome: 'Unknown / Untested'})
                     }
                 }
             }
@@ -107,9 +107,9 @@ var app = new Vue({
 
             let color = (el) => {
                 if (el.outcome == "Positive"){
-                    return "#f238a6"
-                } else if (el.outcome == "Negative") {
                     return "#4af2a1"
+                } else if (el.outcome == "Negative") {
+                    return "#f238a6"
                 } else {
                     return "#d6d6d6"
                 }
@@ -182,6 +182,22 @@ var app = new Vue({
                 Percentage of Population Tested Positive: ${PopulationPositive.toFixed(2)}%<br>
                 Projected Percentage of Population Tested Positive: ${PopulationProjected.toFixed(2)}%`
             }
+
+            document.querySelector('#tooltip').innerHTML = tooltipString;
+        },
+        gridTooltip(el){
+            tooltip = d3.select('#tooltip')
+                    .style("left", (event.clientX) + "px")		
+                    .style("top", (event.clientY) + "px");	
+            this.tooltipVisible = true;
+
+            let tooltipString =''
+            if (this.neighborhoods.hasOwnProperty(el.zip)){
+                tooltipString += `Neighborhood: ${this.neighborhoods[el.zip].Neighborhood}<br>
+                Borough: ${this.neighborhoods[el.zip].Borough}<br>`
+            }
+            tooltipString += `Zip: ${el.zip}<br>
+            Test Result: <strong>${el.outcome}</strong>`
 
             document.querySelector('#tooltip').innerHTML = tooltipString;
         },

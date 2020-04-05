@@ -18,12 +18,14 @@
         <label for="sortCheckbox">Sort</label>
         <input type="checkbox" v-model="sortOutcomes" id='sortCheckbox'>
       </div>
+      <div><strong>Each dot represents 100 people.</strong></div>
+      <div><a href="/">Back to the Homepage</a></div>
     </div>
     <div id="main">
       <div class='vis' id='bubbles'>
         <svg :width="svgWidth" :height="svgHeight">
           <g :transform="'translate(' + margin.left + ',' + margin.top + ')'">
-            <circle v-for="(el, i) in predicted" :cx="grid.x(i)" :cy="grid.y(i)" :r="grid.size" :fill="grid.color(el)"/>
+            <circle v-for="(el, i) in predicted" :cx="grid.x(i)" :cy="grid.y(i)" :r="grid.size" :fill="grid.color(el)" @mouseover="gridTooltip(el)" @mouseout='tooltipVisible = false'/>
           </g>
         </svg>
       </div>

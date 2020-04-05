@@ -1,9 +1,14 @@
 #sidebar{
     position:absolute;
-    right:0;
-    top:0;
-    width:20vw;
+    right:20px;
+    top:20px;
     padding:20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-style: solid;
+    border-width: 1px;
+    border-color: grey;
+    border-radius: 5px;
+
 }
 
 .value{
@@ -36,13 +41,15 @@ circle,text, path{
 
 
 #tooltip{
-    padding: 10px;
+    padding: 15px;
     border-radius: 5px;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.8);
     position: fixed;			
     pointer-events: none;		
     opacity: 0;
-    width:600px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(230, 230, 230);
 }
 
 #tooltip.active{
