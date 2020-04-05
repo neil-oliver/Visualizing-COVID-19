@@ -16,7 +16,9 @@ var app = new Vue({
         map:false,
         population: {},
         neighborhoods:{},
-        showAbout: true
+        showAbout: true,
+        sortOutcomes: false,
+        totals: []
     },
     created () {
         var that = this;
@@ -25,8 +27,19 @@ var app = new Vue({
             data.forEach(element => {
                 element.x = Math.random()
                 element.y = Math.random()
+                if(element.MODZCTA != 'NA') that.tests.push(element)
             });
-            that.tests = data
+
+            for (let i in that.tests){
+                let zip = that.tests[i]
+                for (let x=0;x<zip.Total;x+=100){
+                    if (x <= zip.Positive){
+                        that.totals.push({'zip':zip.MODZCTA, outcome: 'Positive'})
+                    } else {
+                        that.totals.push({'zip':zip.MODZCTA, outcome: 'Negative'})
+                    }
+                }
+            }
 
         })
 
@@ -57,14 +70,54 @@ var app = new Vue({
                 }
             });
         })
-
     },
     computed: {
+
         width() {
             return this.svgWidth - this.margin.left - this.margin.right;
         },
         height() {
             return this.svgHeight - this.margin.top - this.margin.bottom;
+        },
+        predicted(){
+            let additional = []
+            if (this.multiplier > 1){
+                for (let i in this.totals){
+                    let el = this.totals[i]
+                    for (let x=0;x<(this.multiplier-1);x++){
+                        additional.push({'zip':el.zip, outcome: 'Unknown'})
+                    }
+                }
+            }
+            return this.totals.concat(additional)
+        },
+        grid(){
+            const rowLength = Math.ceil(Math.sqrt(this.predicted.length))
+            const xScale = d3.scaleLinear()
+                .domain([0,rowLength])
+                .range([0, this.width])
+
+            const x = (i) => xScale(i % rowLength )
+
+            const yScale = d3.scaleLinear()
+                .domain([0,rowLength])
+                .range([0, this.height])
+
+            const y = (i) => yScale(Math.floor(i / rowLength))
+
+            let color = (el) => {
+                if (el.outcome == "Positive"){
+                    return "#f238a6"
+                } else if (el.outcome == "Negative") {
+                    return "#4af2a1"
+                } else {
+                    return "#d6d6d6"
+                }
+            }
+
+            size = this.height / (rowLength*3);
+
+            return {x, y, color, size}
         },
         scale() {
 
@@ -78,7 +131,7 @@ var app = new Vue({
                 .domain([0,d3.max(this.tests, d => d.Positive * this.maxMultiplier)]);
             
             const color = d3.scaleSequential()
-                .domain([100,0]).interpolator(d3.interpolateRdYlGn)
+                .domain(d3.extent(this.tests, d => d['zcta_cum.perc_pos']).reverse()).interpolator(d3.interpolateRdYlGn)
 
             if (this.map){
                 x = (x) => x
@@ -137,7 +190,7 @@ var app = new Vue({
                 element.x = Math.random()
                 element.y = Math.random()
             });
-        },
+        }
     },
     watch:{
         map(){
@@ -152,6 +205,13 @@ var app = new Vue({
                 });
             } else {
                 this.randomize()
+            }
+        },
+        sortOutcomes(){
+            if (this.sortOutcomes){
+                this.predicted.sort((a,b) => (a.outcome > b.outcome) ? 1 : ((b.outcome > a.outcome) ? -1 : 0));
+            } else {
+                this.predicted.sort((a,b) => (a.zip > b.zip) ? 1 : ((b.zip > a.zip) ? -1 : 0));
             }
         }
     }
