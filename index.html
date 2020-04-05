@@ -51,7 +51,6 @@
               <circle :cx="scale.x(element.x)" :cy="scale.y(element.y)" :r="scale.size(element.Positive)" :fill="scale.color(element['zcta_cum.perc_pos'])"/>
               <circle :cx="scale.x(element.x)" :cy="scale.y(element.y)" :r="scale.size(element.Positive*multiplier)"  :fill="scale.color(element['zcta_cum.perc_pos'])" fill-opacity="0.6" stroke-opacity="1" :stroke="scale.color(element['zcta_cum.perc_pos'])" stroke-width='1px' stroke-dasharray="2"/>
             </g>
-            <text v-show="map" x="40" y="10">Unknown Location</text>
           </g>
         </svg>
       </div>
