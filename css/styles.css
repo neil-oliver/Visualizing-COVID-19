@@ -80,3 +80,11 @@ circle,text, path{
     font-size: 2em;
     padding: 1em;
 }
+
+#map{
+    opacity:0;
+}
+#map.active{
+    transition: opacity 1s ease-in-out 0s;
+    opacity: 1;
+}

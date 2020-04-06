@@ -14,6 +14,7 @@ var app = new Vue({
         maxMultiplier: 18,
         nycGeoJSON: null,
         map:false,
+        outlineButton:false,
         population: {},
         neighborhoods:{},
         showAbout: true,
@@ -152,6 +153,13 @@ var app = new Vue({
             .rotate([96, -39])
             .fitSize([this.width, this.height], this.nycGeoJSON)
         },
+        outline(){
+            if (this.map == false){
+                return false
+            } else {
+                return this.outlineButton
+            }
+        }
     },
     methods: {
         tooltip(el){
