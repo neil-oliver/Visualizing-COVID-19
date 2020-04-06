@@ -17,7 +17,7 @@ var app = new Vue({
         outlineButton:false,
         population: {},
         neighborhoods:{},
-        showAbout: true,
+        showAbout: false,
         sortOutcomes: false,
         totals: []
     },
