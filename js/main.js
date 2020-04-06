@@ -108,9 +108,9 @@ var app = new Vue({
 
             let color = (el) => {
                 if (el.outcome == "Positive"){
-                    return "#f238a6"
+                    return "#ff2602"
                 } else if (el.outcome == "Negative") {
-                    return "#4af2a1"
+                    return "#ffcc02"
                 } else {
                     return "#d6d6d6"
                 }
