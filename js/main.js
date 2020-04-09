@@ -28,7 +28,7 @@ var app = new Vue({
             data.forEach(element => {
                 element.x = Math.random()
                 element.y = Math.random()
-                if(element.MODZCTA != 'NA') that.tests.push(element)
+                if(element.MODZCTA != 'NA' || element.MODZCTA != 99999) that.tests.push(element)
             });
 
             for (let i in that.tests){
