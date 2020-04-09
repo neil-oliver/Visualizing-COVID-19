@@ -28,7 +28,11 @@ var app = new Vue({
             data.forEach(element => {
                 element.x = Math.random()
                 element.y = Math.random()
-                if(element.MODZCTA != 'NA' || element.MODZCTA != 99999) that.tests.push(element)
+                if(element.MODZCTA != "NA"){
+                    if (element.MODZCTA != "99999"){ // no idea why i had to nest this
+                        that.tests.push(element)
+                    }
+                }
             });
 
             for (let i in that.tests){
@@ -139,7 +143,7 @@ var app = new Vue({
                 y = (y) => y
             }
 
-            return {size, x, y,color};
+            return {size, x, y, color};
         },
         nyc(){
             let path = d3.geoPath()
