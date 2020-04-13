@@ -30,6 +30,20 @@
         <input type="checkbox" v-model="showAbout" id='aboutCheckbox'>
       </div>
       <div><a href="./grid.html">View as Grid</a></div>
+      <div class='selection'>
+        <label for="timeperiod">Color Representation</label>
+        <select id="timeperiod" v-model="color">
+          <option value="zcta_cum.perc_pos">Percentage Positive</option>
+          <option value="Positive">Total Positive</option>
+          <option value="Total">Total Tested</option>
+          <option value="population">Population</option>
+          <option value="density">Population Density</option>
+          <option value="populationTested">% Population Tested</option>
+          <option value="populationPositive">% Population Positive</option>
+          <option value="income">Avg Income</option>
+          <option value="testIncome">Tests / Income</option>
+        </select>
+      </div>
     </div>
     <div id="about" v-show="showAbout">
       <div id="about-title">NYC: Together as One</div>
@@ -52,8 +66,8 @@
           <g :transform="'translate(' + margin.left + ',' + margin.top + ')'">
             <path id="map" :class="{ active: outline }" :d="nyc" stroke='#000' stroke-width='1px' opacity="0.4"/>
             <g v-for="(element, i) in tests" @mouseover="tooltip(element)" @mouseout='tooltipVisible = false'>
-              <circle :cx="scale.x(element.x)" :cy="scale.y(element.y)" :r="scale.size(element.Positive)" :fill="scale.color(element['zcta_cum.perc_pos'])"/>
-              <circle :cx="scale.x(element.x)" :cy="scale.y(element.y)" :r="scale.size(element.Positive*multiplier)"  :fill="scale.color(element['zcta_cum.perc_pos'])" fill-opacity="0.6" stroke-opacity="1" :stroke="scale.color(element['zcta_cum.perc_pos'])" stroke-width='1px' stroke-dasharray="2"/>
+              <circle :cx="scale.x(element.x)" :cy="scale.y(element.y)" :r="scale.size(element.Positive)" :fill="scale.color(element[color])"/>
+              <circle :cx="scale.x(element.x)" :cy="scale.y(element.y)" :r="scale.size(element.Positive*multiplier)"  :fill="scale.color(element[color])" fill-opacity="0.6" stroke-opacity="1" :stroke="scale.color(element[color])" stroke-width='1px' stroke-dasharray="2"/>
             </g>
           </g>
         </svg>

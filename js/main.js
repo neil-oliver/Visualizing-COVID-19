@@ -17,36 +17,14 @@ var app = new Vue({
         outlineButton:false,
         population: {},
         neighborhoods:{},
+        income:{},
         showAbout: true,
         sortOutcomes: false,
-        totals: []
+        totals: [],
+        color: 'zcta_cum.perc_pos'
     },
     created () {
         var that = this;
-
-        d3.csv('https://raw.githubusercontent.com/nychealth/coronavirus-data/master/tests-by-zcta.csv').then(function(data){
-            data.forEach(element => {
-                element.x = Math.random()
-                element.y = Math.random()
-                if(element.MODZCTA != "NA"){
-                    if (element.MODZCTA != "99999"){ // no idea why i had to nest this
-                        that.tests.push(element)
-                    }
-                }
-            });
-
-            for (let i in that.tests){
-                let zip = that.tests[i]
-                for (let x=0;x<zip.Total;x+=100){
-                    if (x <= zip.Positive){
-                        that.totals.push({'zip':zip.MODZCTA, outcome: 'Positive'})
-                    } else {
-                        that.totals.push({'zip':zip.MODZCTA, outcome: 'Negative'})
-                    }
-                }
-            }
-
-        })
 
         d3.dsv(';','data/us-zip-code-latitude-and-longitude.csv').then(function(data){
             data.forEach(element => {
@@ -66,14 +44,62 @@ var app = new Vue({
 
         })
 
+        d3.csv('data/income.csv').then(function(data){
+            data.forEach(element => {
+                that.income[element.Zip] = element
+            });
+
+        })
+
         d3.csv('data/neighborhoods.csv').then(function(data){
             data.forEach(element => {
                 element.Zip = JSON.parse(element.Zip)
                 for (i in element.Zip){
                     let zip = element.Zip[i]
                     that.neighborhoods[zip] = {Borough: element.Borough, Neighborhood: element.Neighborhood}
+                    
                 }
             });
+        })
+
+        d3.csv('https://raw.githubusercontent.com/nychealth/coronavirus-data/master/tests-by-zcta.csv').then(function(data){
+            data.forEach(element => {
+                element.x = Math.random()
+                element.y = Math.random()
+                if(element.MODZCTA != "NA"){
+                    if (element.MODZCTA != "99999"){ // no idea why i had to nest this
+                        element.Total = parseInt(element.Total)
+                        element.Positive = parseInt(element.Positive)
+                        element.neighborhood = that.neighborhoods[element.MODZCTA]
+                        element.population = parseInt(that.population[element.MODZCTA].Population)
+                        element.density = parseInt(that.population[element.MODZCTA].Density)
+                        element.populationTested = (element.Total / element.population)*100
+                        element.populationPositive = (element.Positive / element.population)*100
+                        if (that.income.hasOwnProperty(element.MODZCTA)){
+                            element.income = parseInt(that.income[element.MODZCTA]['Avg-Income'])
+                            element.testIncome = element.Total / element.income
+                        } else {
+                            element.income = 'N/A'
+                            element.testIncome = 'N/A'
+                        }
+
+
+                        that.tests.push(element)
+                    }
+                }
+            });
+
+            for (let i in that.tests){
+                let zip = that.tests[i]
+                for (let x=0;x<zip.Total;x+=100){
+                    if (x <= zip.Positive){
+                        that.totals.push({'zip':zip.MODZCTA, outcome: 'Positive'})
+                    } else {
+                        that.totals.push({'zip':zip.MODZCTA, outcome: 'Negative'})
+                    }
+                }
+            }
+
         })
     },
     computed: {
@@ -134,9 +160,14 @@ var app = new Vue({
 
             const size = d3.scaleLinear().range([5,500])
                 .domain([0,d3.max(this.tests, d => d.Positive * this.maxMultiplier)]);
-            
-            const color = d3.scaleSequential()
-                .domain(d3.extent(this.tests, d => d['zcta_cum.perc_pos']).reverse()).interpolator(d3.interpolateRdYlGn)
+
+                let color = d3.scaleSequential()
+                    .domain(d3.extent(this.tests, d => d[this.color]).reverse()).interpolator(d3.interpolateRdYlGn)
+
+                if (this.color == 'income'){
+                    color = d3.scaleSequential()
+                        .domain(d3.extent(this.tests, d => d[this.color])).interpolator(d3.interpolateRdYlGn)
+                }
 
             if (this.map){
                 x = (x) => x
@@ -190,10 +221,14 @@ var app = new Vue({
                 let PopulationProjected = ((el.Positive*this.multiplier) / this.population[el.MODZCTA].Population)*100
 
                 tooltipString += `<br>Zip Population: ${this.population[el.MODZCTA].Population}<br>
+                Zip Population Density: ${this.population[el.MODZCTA].Density} Sq Mile<br>
                 Percentage of Population Tested: ${populationTested.toFixed(2)}%<br>
                 Percentage of Population Tested Positive: ${PopulationPositive.toFixed(2)}%<br>
                 Projected Percentage of Population Tested Positive: ${PopulationProjected.toFixed(2)}%`
             }
+
+            tooltipString += `<br>Median Income: ${el.income}<br>
+            Tests / Income: ${el.testIncome}<br>`
 
             document.querySelector('#tooltip').innerHTML = tooltipString;
         },
