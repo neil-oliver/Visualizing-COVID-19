@@ -1,0 +1,12 @@
+body{
+    font-family: 'Roboto', sans-serif;
+}
+
+#about-title{
+    font-family: 'DM Serif Display', serif;
+}
+#sidebar{
+    text-transform: uppercase;
+    color: gray;
+    font-size: 0.8em;
+}

@@ -2,24 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title></title>
+  <title>Welcome to COVID-19 NYC Edition</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/grid.css">
+  <link href="https://fonts.googleapis.com/css?family=DM+Serif+Display|Roboto:300,700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body>
   <div id="app">
     <div id="sidebar">
       <div class='selection'>
-        <label for="MultiplierSlider">Multiplier</label>
+        <label :style="{color:multiplierScale}" for="MultiplierSlider">Multiplier</label>
         <input type="range" min="1" :max="maxMultiplier" v-model="multiplier" class="slider" step="1" id="multiplierSlider"> {{multiplier}}
       </div>
+      <div><span class="dot" style="background-color:#fca52a;"></span> Tested Positive</div>
+      <div><span class="dot" style="background-color:#ffcc02;"></span> Tested Negative</div>
+      <div v-if="multiplier > 1"><span class="dot" style="background-color:#d6d6d6;"></span> Unknown Outcome</div>
       <div class='selection'>
         <label for="sortCheckbox">Sort</label>
         <input type="checkbox" v-model="sortOutcomes" id='sortCheckbox'>
       </div>
-      <div><strong>Each dot represents 100 people.</strong></div>
-      <div><a href="./">Back to the Homepage</a></div>
+      <div><strong style="color:black;">Each dot represents 100 people.</strong></div>
+      <div class='selection'>
+        <label for="aboutCheckbox">Show About</label>
+        <input type="checkbox" v-model="showAbout" id='aboutCheckbox'>
+      </div>
+    </div>
+    <div id="about" v-show="showAbout">
+      <div id="about-title">Welcome To NYC Through The Eyes Of COVID-19 Testing</div>
+      <div id="about-body">
+        <p>Each circle represents a 100 people that have been tested and living in the same Zip Code.</p>
+        <p>More tests are being completed every hour, but we cannot be certain about the true number of people who are infected.
+        Experts estimations vary, from 5x the current tested number to 18x.</p> 
+        <p>Change the multiplier to view different estimates and how many people may be infected with COVID-19 and see how uncertain we are about the true impacts of this virus.</p>
+      </div>
+      <button id='aboutButton' v-on:click="showAbout = false">Dismiss</button>
     </div>
     <div id="main">
       <div class='vis' id='bubbles'>

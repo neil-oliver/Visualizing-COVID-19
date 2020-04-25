@@ -138,7 +138,7 @@ var app = new Vue({
 
             let color = (el) => {
                 if (el.outcome == "Positive"){
-                    return "#ff2602"
+                    return "#fca52a"
                 } else if (el.outcome == "Negative") {
                     return "#ffcc02"
                 } else {
@@ -149,6 +149,12 @@ var app = new Vue({
             size = this.height / (rowLength*3);
 
             return {x, y, color, size}
+        },
+        multiplierScale(){
+            let color = d3.scaleSequential()
+            .domain([this.maxMultiplier,0]).interpolator(d3.interpolateRdYlGn)
+
+            return color(this.multiplier)
         },
         scale() {
 

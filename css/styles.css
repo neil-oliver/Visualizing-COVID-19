@@ -88,3 +88,10 @@ circle,text, path{
     transition: opacity 1s ease-in-out 0s;
     opacity: 1;
 }
+
+.dot {
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    display: inline-block;
+  }
