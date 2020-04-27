@@ -18,26 +18,27 @@
       </div>
       <div><span class="dot" style="background-color:#fca52a;"></span> Tested Positive</div>
       <div><span class="dot" style="background-color:#ffcc02;"></span> Tested Negative</div>
-      <div v-if="multiplier > 1"><span class="dot" style="background-color:#d6d6d6;"></span> Unknown Outcome</div>
+      <div v-if="multiplier > 1"><span class="dot" style="background-color:#d6d6d6;"></span> Positive Undiagnosed</div>
       <div class='selection'>
         <label for="sortCheckbox">Sort</label>
         <input type="checkbox" v-model="sortOutcomes" id='sortCheckbox'>
       </div>
-      <div><strong style="color:black;">Each dot represents 100 people.</strong></div>
+      <div><strong style="color:black;">Each dot represents 200 people.</strong></div>
       <div class='selection'>
         <label for="aboutCheckbox">Show About</label>
         <input type="checkbox" v-model="showAbout" id='aboutCheckbox'>
       </div>
     </div>
     <div id="about" v-show="showAbout">
-      <div id="about-title">Welcome To NYC Through The Eyes Of COVID-19 Testing</div>
+      <div id="about-title">NYC Through The Eyes Of COVID-19 Testing</div>
       <div id="about-body">
-        <p>Each circle represents a 100 people that have been tested and living in the same Zip Code.</p>
         <p>More tests are being completed every hour, but we cannot be certain about the true number of people who are infected.
         Experts estimations vary, from 5x the current tested number to 18x.</p> 
         <p>Change the multiplier to view different estimates and how many people may be infected with COVID-19 and see how uncertain we are about the true impacts of this virus.</p>
+        <p>Each circle represents a 200 people that have been tested and living in the same Zip Code.</p>
+        <p>Try hovering over the different dots to get more information about the location and test results.</p>
       </div>
-      <button id='aboutButton' v-on:click="showAbout = false">Dismiss</button>
+      <button id='aboutButton' v-on:click="showAbout = false">Start</button>
     </div>
     <div id="main">
       <div class='vis' id='bubbles'>

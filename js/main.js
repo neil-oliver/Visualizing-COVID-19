@@ -91,7 +91,7 @@ var app = new Vue({
 
             for (let i in that.tests){
                 let zip = that.tests[i]
-                for (let x=0;x<zip.Total;x+=100){
+                for (let x=0;x<zip.Total;x+=200){
                     if (x <= zip.Positive){
                         that.totals.push({'zip':zip.MODZCTA, outcome: 'Positive'})
                     } else {
