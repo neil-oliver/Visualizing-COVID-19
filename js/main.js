@@ -21,7 +21,8 @@ var app = new Vue({
         showAbout: true,
         sortOutcomes: false,
         totals: [],
-        color: 'zcta_cum.perc_pos'
+        color: 'zcta_cum.perc_pos',
+        predicted: []
     },
     created () {
         var that = this;
@@ -83,7 +84,6 @@ var app = new Vue({
                             element.testIncome = 'N/A'
                         }
 
-
                         that.tests.push(element)
                     }
                 }
@@ -91,64 +91,35 @@ var app = new Vue({
 
             for (let i in that.tests){
                 let zip = that.tests[i]
-                for (let x=0;x<zip.Total;x+=200){
+                for (let x=0;x<zip.Total;x+=500){
                     if (x <= zip.Positive){
-                        that.totals.push({'zip':zip.MODZCTA, outcome: 'Positive'})
+                        that.totals.push({'zip':zip.MODZCTA, outcome: 'Positive',x:0, y:-100, multiplier:0})
+                        that.predicted.push({'zip':zip.MODZCTA, outcome: 'Positive',x:0, y:-100,multiplier:0})
+
                     } else {
-                        that.totals.push({'zip':zip.MODZCTA, outcome: 'Negative'})
+                        that.totals.push({'zip':zip.MODZCTA, outcome: 'Negative',x:0, y:-100,multiplier:0})
+                        that.predicted.push({'zip':zip.MODZCTA, outcome: 'Negative',x:0, y:-100,multiplier:0})
                     }
                 }
             }
 
         })
     },
+    mounted(){
+        setTimeout(()=> {
+            this.updateCoords()
+        },500)
+    },
     computed: {
 
         width() {
             return this.svgWidth - this.margin.left - this.margin.right;
         },
+        gridWidth() {
+            return (this.svgWidth*0.8) - this.margin.left - this.margin.right;
+        },
         height() {
             return this.svgHeight - this.margin.top - this.margin.bottom;
-        },
-        predicted(){
-            let additional = []
-            if (this.multiplier > 1){
-                for (let i in this.totals){
-                    let el = this.totals[i]
-                    for (let x=0;x<(this.multiplier-1);x++){
-                        additional.push({'zip':el.zip, outcome: 'Unknown / Untested'})
-                    }
-                }
-            }
-            return this.totals.concat(additional)
-        },
-        grid(){
-            const rowLength = Math.ceil(Math.sqrt(this.predicted.length))
-            const xScale = d3.scaleLinear()
-                .domain([0,rowLength])
-                .range([0, this.width])
-
-            const x = (i) => xScale(i % rowLength )
-
-            const yScale = d3.scaleLinear()
-                .domain([0,rowLength])
-                .range([0, this.height])
-
-            const y = (i) => yScale(Math.floor(i / rowLength))
-
-            let color = (el) => {
-                if (el.outcome == "Positive"){
-                    return "#fca52a"
-                } else if (el.outcome == "Negative") {
-                    return "#ffcc02"
-                } else {
-                    return "#d6d6d6"
-                }
-            }
-
-            size = this.height / (rowLength*3);
-
-            return {x, y, color, size}
         },
         multiplierScale(){
             let color = d3.scaleSequential()
@@ -181,6 +152,22 @@ var app = new Vue({
             }
 
             return {size, x, y, color};
+        },
+        grid(){
+            const rowLength = Math.ceil(Math.sqrt(this.predicted.length))
+            let color = (el) => {
+                if (el.outcome == "Positive"){
+                    return "#fca52a"
+                } else if (el.outcome == "Negative") {
+                    return "#ffcc02"
+                } else {
+                    return "#d6d6d6"
+                }
+            }
+
+            size = this.height / (rowLength*3);
+
+            return {color, size}
         },
         nyc(){
             let path = d3.geoPath()
@@ -259,9 +246,46 @@ var app = new Vue({
                 element.x = Math.random()
                 element.y = Math.random()
             });
+        },
+        updateCoords(){
+            const rowLength = Math.ceil(Math.sqrt(this.predicted.length))
+            const xScale = d3.scaleLinear()
+                .domain([0,rowLength])
+                .range([0, this.gridWidth])
+
+            const x = (i) => xScale(i % rowLength )
+
+            const yScale = d3.scaleLinear()
+                .domain([0,rowLength])
+                .range([0, this.height])
+
+            const y = (i) => yScale(Math.floor(i / rowLength))
+
+            for (let i = 0; i<this.predicted.length;i++){
+                this.predicted[i].x = x(i)
+                this.predicted[i].y = y(i)
+            }
         }
     },
     watch:{
+        multiplier(newVal, oldVal){
+
+            let diff = newVal - oldVal
+
+            if (diff > 0 ){
+                for(let i in this.totals){
+                    let el = this.totals[i]
+                    for (let x=oldVal;x<newVal;x++){
+                        this.predicted.push({'zip':el.zip, outcome: 'Unknown / Untested', multiplier:x+1})
+                    }
+                }
+            } else {
+                this.predicted = this.predicted.filter(x => x.multiplier <= newVal)
+            }
+
+            this.updateCoords()
+
+        },
         map(){
             if(this.map){
                 let that = this
@@ -278,9 +302,9 @@ var app = new Vue({
         },
         sortOutcomes(){
             if (this.sortOutcomes){
-                this.predicted.sort((a,b) => (a.outcome > b.outcome) ? 1 : ((b.outcome > a.outcome) ? -1 : 0));
+                this.predicted.sort((a,b) => (a.outcome < b.outcome) ? 1 : ((b.outcome < a.outcome) ? -1 : 0));
             } else {
-                this.predicted.sort((a,b) => (a.zip > b.zip) ? 1 : ((b.zip > a.zip) ? -1 : 0));
+                this.predicted.sort((a,b) => (a.zip < b.zip) ? 1 : ((b.zip < a.zip) ? -1 : 0));
             }
         }
     }

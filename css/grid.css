@@ -2,11 +2,32 @@ body{
     font-family: 'Roboto', sans-serif;
 }
 
+#app{
+    display: flex;
+    flex-wrap: wrap;
+}
+
 #about-title{
     font-family: 'DM Serif Display', serif;
 }
-#sidebar{
+#grid-sidebar{
+    padding: 20px;
+    line-height: 3em;
     text-transform: uppercase;
     color: gray;
     font-size: 0.8em;
+    width: 17vw;
+    height:100vh;
+    background-color: #F8F8F8;
 }
+
+#about{
+    top: 50%;
+    left: 55%;
+}
+
+#main{
+    width: 80vw;
+}
+
+

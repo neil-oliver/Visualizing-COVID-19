@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>Welcome to COVID-19 NYC Edition</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/grid.css">
   <link href="https://fonts.googleapis.com/css?family=DM+Serif+Display|Roboto:300,700&display=swap" rel="stylesheet">
@@ -11,22 +11,72 @@
 </head>
 <body>
   <div id="app">
-    <div id="sidebar">
-      <div class='selection'>
-        <label :style="{color:multiplierScale}" for="MultiplierSlider">Multiplier</label>
-        <input type="range" min="1" :max="maxMultiplier" v-model="multiplier" class="slider" step="1" id="multiplierSlider"> {{multiplier}}
+    <div id="grid-sidebar">
+      <h1>NYC COVID-19 Data Explorer</h1>
+      <div>
+        <div>
+          <label :style="{color:multiplierScale}">Multiplier</label>
+        </div>
+        <el-radio-group v-model="multiplier" size="mini">
+          <div>
+            <el-radio label="0">No Multiplier
+              <el-popover
+              placement="bottom"
+              title="Title"
+              width="200"
+              trigger="hover"
+              content="this is content, this is content, this is content">
+              <i class="el-icon-info" slot="reference"></i>
+            </el-popover>
+            </el-radio-button>
+              
+          </div>
+          <div>
+            <el-radio label="5">x5
+              <el-popover
+              placement="bottom"
+              title="Title"
+              width="200"
+              trigger="hover"
+              content="this is content, this is content, this is content">
+              <i class="el-icon-info" slot="reference"></i>
+            </el-popover>
+            </el-radio-button>
+          </div>
+          <div>
+            <el-radio label="7">x7
+              <el-popover
+              placement="bottom"
+              title="Title"
+              width="200"
+              trigger="hover"
+              content="this is content, this is content, this is content">
+              <i class="el-icon-info" slot="reference"></i>
+            </el-popover>
+            </el-radio-button>
+          </div>
+          <div>
+            <el-radio label="18">x18
+              <el-popover
+              placement="bottom"
+              title="Title"
+              width="200"
+              trigger="hover"
+              content="this is content, this is content, this is content">
+              <i class="el-icon-info" slot="reference"></i>
+            </el-popover>
+            </el-radio-button>
+          </div>
+        </el-radio-group>
       </div>
       <div><span class="dot" style="background-color:#fca52a;"></span> Tested Positive</div>
       <div><span class="dot" style="background-color:#ffcc02;"></span> Tested Negative</div>
       <div v-if="multiplier > 1"><span class="dot" style="background-color:#d6d6d6;"></span> Positive Undiagnosed</div>
-      <div class='selection'>
-        <label for="sortCheckbox">Sort</label>
-        <input type="checkbox" v-model="sortOutcomes" id='sortCheckbox'>
-      </div>
-      <div><strong style="color:black;">Each dot represents 200 people.</strong></div>
-      <div class='selection'>
-        <label for="aboutCheckbox">Show About</label>
-        <input type="checkbox" v-model="showAbout" id='aboutCheckbox'>
+      <el-checkbox v-model="sortOutcomes">Sort</el-checkbox>
+      <div><strong style="color:black;">Each dot represents 500 people.</strong></div>
+      <el-checkbox v-model="showAbout">Show About</el-checkbox>
+      <div>
+        Data Source : <a href="https://github.com/nychealth/coronavirus-data">Live NYC Health Coronavirus Data</a>
       </div>
     </div>
     <div id="about" v-show="showAbout">
@@ -38,22 +88,20 @@
         <p>Each circle represents a 200 people that have been tested and living in the same Zip Code.</p>
         <p>Try hovering over the different dots to get more information about the location and test results.</p>
       </div>
-      <button id='aboutButton' v-on:click="showAbout = false">Start</button>
+      <el-button v-on:click="showAbout = false">Start</el-button>
     </div>
     <div id="main">
       <div class='vis' id='bubbles'>
-        <svg :width="svgWidth" :height="svgHeight">
+        <svg width="100%" :height="svgHeight">
           <g :transform="'translate(' + margin.left + ',' + margin.top + ')'">
-            <circle v-for="(el, i) in predicted" :cx="grid.x(i)" :cy="grid.y(i)" :r="grid.size" :fill="grid.color(el)" @mouseover="gridTooltip(el)" @mouseout='tooltipVisible = false'/>
+            <circle v-for="(el, i) in predicted" :key="i" :cx="el.x" :cy="el.y" :r="grid.size" :fill="grid.color(el)" @mouseover="gridTooltip(el)" @mouseout='tooltipVisible = false'/>
           </g>
         </svg>
       </div>
     </div>
     <div id='tooltip' :class="{ active: tooltipVisible }"></div>
   </div>
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="./js/main.js"></script>
