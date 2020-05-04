@@ -116,7 +116,7 @@ var app = new Vue({
             return this.svgWidth - this.margin.left - this.margin.right;
         },
         gridWidth() {
-            return (this.svgWidth*0.8) - this.margin.left - this.margin.right;
+            return (this.svgWidth*0.75) - this.margin.left - this.margin.right;
         },
         height() {
             return this.svgHeight - this.margin.top - this.margin.bottom;
