@@ -161,7 +161,7 @@ var app = new Vue({
                 } else if (el.outcome == "Negative") {
                     return "#ffcc02"
                 } else {
-                    return "#d6d6d6"
+                    return "#F5F5F5"
                 }
             }
 
@@ -265,6 +265,15 @@ var app = new Vue({
                 this.predicted[i].x = x(i)
                 this.predicted[i].y = y(i)
             }
+
+        },
+        sort(){
+            if (this.sortOutcomes){
+                this.predicted.sort((a,b) => (a.outcome < b.outcome) ? 1 : ((b.outcome < a.outcome) ? -1 : 0));
+            } else {
+                this.predicted.sort((a,b) => (a.zip < b.zip) ? 1 : ((b.zip < a.zip) ? -1 : 0));
+            }
+            this.updateCoords()
         }
     },
     watch:{
@@ -282,8 +291,7 @@ var app = new Vue({
             } else {
                 this.predicted = this.predicted.filter(x => x.multiplier <= newVal)
             }
-
-            this.updateCoords()
+            this.sort()
 
         },
         map(){
@@ -301,11 +309,7 @@ var app = new Vue({
             }
         },
         sortOutcomes(){
-            if (this.sortOutcomes){
-                this.predicted.sort((a,b) => (a.outcome < b.outcome) ? 1 : ((b.outcome < a.outcome) ? -1 : 0));
-            } else {
-                this.predicted.sort((a,b) => (a.zip < b.zip) ? 1 : ((b.zip < a.zip) ? -1 : 0));
-            }
+            this.sort()
         }
     }
 });

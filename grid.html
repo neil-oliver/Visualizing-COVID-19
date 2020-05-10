@@ -111,7 +111,7 @@
       <div class='vis' id='bubbles'>
         <svg width="100%" :height="svgHeight">
           <g :transform="'translate(' + margin.left + ',' + margin.top + ')'">
-            <circle v-for="(el, i) in predicted" :key="i" :cx="el.x" :cy="el.y" :r="grid.size" :fill="grid.color(el)" @mouseover="gridTooltip(el)" @mouseout='tooltipVisible = false'/>
+            <circle v-for="(el, i) in predicted" :key="i" :cx="el.x" :cy="el.y" :r="grid.size" :fill="grid.color(el)" :stroke="el.outcome == 'Unknown / Untested' ? '#d6d6d6' : 'None'" stroke-width='2px' stroke-dasharray="2" @mouseover="gridTooltip(el)" @mouseout='tooltipVisible = false'/>
           </g>
         </svg>
       </div>
