@@ -21,13 +21,26 @@ body{
     background-color: #F8F8F8;
 }
 
-#about{
-    top: 50%;
-    left: 55%;
+#grid-about{
+    position: absolute;
+    left:0;
+    top:20%;
+    margin: 5vw;
+    text-align: center;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 50px;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-style: solid;
+    border-width: 1px;
+    border-color: grey;
 }
 
 #main{
     width: 75vw;
+    position: relative;
+    text-align: center;
 }
 
 h2{

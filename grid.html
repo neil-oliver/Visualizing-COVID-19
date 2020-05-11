@@ -22,15 +22,14 @@
           <div>
             <el-radio label="0">No Multiplier
               <el-popover
-              placement="bottom"
-              title="No Multiplier"
-              width="200"
-              trigger="hover"
-              content="Number of confirmed positive test numbers are predicted to be the total positive in population.">
-              <i class="el-icon-info" slot="reference"></i>
-            </el-popover>
+                placement="bottom"
+                title="No Multiplier"
+                width="200"
+                trigger="hover"
+                content="Number of confirmed positive test numbers are predicted to be the total positive in population.">
+                <i class="el-icon-info" slot="reference"></i>
+              </el-popover>
             </el-radio-button>
-              
           </div>
           <div>
             <el-radio label="2">x2
@@ -97,18 +96,18 @@
         <a href="https://github.com/neil-oliver/Visualizing-COVID-19">GitHub Repository</a>
       </div>
     </div>
-    <div id="about" v-show="showAbout">
-      <div id="about-title">NYC Through The Eyes Of COVID-19 Testing</div>
-      <div id="about-body">
-        <p>More tests are being completed every hour, but we cannot be certain about the true number of people who are infected.
-        Experts estimations vary, from 5x the current tested number to 18x.</p> 
-        <p>Change the multiplier to view different estimates and how many people may be infected with COVID-19 and see how uncertain we are about the true impacts of this virus.</p>
-        <p>Each circle represents a 500 people that have been tested and living in the same Zip Code.</p>
-        <p>Try hovering over the different dots to get more information about the location and test results.</p>
-      </div>
-      <el-button v-on:click="showAbout = false">Start</el-button>
-    </div>
     <div id="main">
+      <div id="grid-about" v-show="showAbout">
+        <div id="about-title">NYC Through The Eyes Of COVID-19 Testing</div>
+        <div id="about-body">
+          <p>More tests are being completed every hour, but we cannot be certain about the true number of people who are infected.
+          Experts estimations vary, from 5x the current tested number to 18x.</p> 
+          <p>Change the multiplier to view different estimates and how many people may be infected with COVID-19 and see how uncertain we are about the true impacts of this virus.</p>
+          <p>Each circle represents a 500 people that have been tested and living in the same Zip Code.</p>
+          <p>Try hovering over the different dots to get more information about the location and test results.</p>
+        </div>
+        <el-button v-on:click="showAbout = false">Start</el-button>
+      </div>
       <div class='vis' id='bubbles'>
         <svg width="100%" :height="svgHeight">
           <g :transform="'translate(' + margin.left + ',' + margin.top + ')'">
