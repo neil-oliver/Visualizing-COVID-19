@@ -30,4 +30,10 @@ body{
     width: 75vw;
 }
 
+h2{
+    font-weight: 600;
+    font-size: 1em;
+    line-height: normal;
+}
+
 

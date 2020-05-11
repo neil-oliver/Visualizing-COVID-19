@@ -24,7 +24,7 @@ var app = new Vue({
         color: 'zcta_cum.perc_pos',
         predicted: []
     },
-    created () {
+    mounted () {
         var that = this;
 
         d3.dsv(';','data/us-zip-code-latitude-and-longitude.csv').then(function(data){
@@ -92,20 +92,20 @@ var app = new Vue({
             for (let i in that.tests){
                 let zip = that.tests[i]
                 for (let x=0;x<zip.Total;x+=500){
+                    let startingX = Math.floor(Math.random()*500)
+                    startingX+=250
                     if (x <= zip.Positive){
-                        that.totals.push({'zip':zip.MODZCTA, outcome: 'Positive',x:0, y:-100, multiplier:0})
-                        that.predicted.push({'zip':zip.MODZCTA, outcome: 'Positive',x:0, y:-100,multiplier:0})
+                        that.totals.push({'zip':zip.MODZCTA, outcome: 'Positive',x:startingX, y:-100, multiplier:0})
+                        that.predicted.push({'zip':zip.MODZCTA, outcome: 'Positive',x:startingX, y:-100,multiplier:0})
 
                     } else {
-                        that.totals.push({'zip':zip.MODZCTA, outcome: 'Negative',x:0, y:-100,multiplier:0})
-                        that.predicted.push({'zip':zip.MODZCTA, outcome: 'Negative',x:0, y:-100,multiplier:0})
+                        that.totals.push({'zip':zip.MODZCTA, outcome: 'Negative',x:startingX, y:-100,multiplier:0})
+                        that.predicted.push({'zip':zip.MODZCTA, outcome: 'Negative',x:startingX, y:-100,multiplier:0})
                     }
                 }
             }
 
         })
-    },
-    mounted(){
         setTimeout(()=> {
             this.updateCoords()
         },500)
